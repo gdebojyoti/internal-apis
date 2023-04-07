@@ -67,29 +67,6 @@ async function authorize() {
   return client;
 }
 
-/**
- * Prints the names and majors of students in a sample spreadsheet:
- * @see https://docs.google.com/spreadsheets/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/edit
- * @param {google.auth.OAuth2} auth The authenticated Google OAuth client.
- */
-async function listMajors(auth) {
-  const sheets = google.sheets({version: 'v4', auth});
-  const res = await sheets.spreadsheets.values.get({
-    spreadsheetId: config['email-collection-sheet-id'],
-    range: 'Sheet1!A3:B',
-  });
-  const rows = res.data.values;
-  if (!rows || rows.length === 0) {
-    console.log('No data found.');
-    return;
-  }
-  console.log('Email ID, Name');
-  rows.forEach((row) => {
-    // Print columns A and E, which correspond to indices 0 and 4.
-    console.log(`${row[0]}, ${row[1]}`);
-  });
-}
-
 async function saveNewEmailId (auth, email) {
   const sheets = google.sheets({version: 'v4', auth});
   const res = await sheets.spreadsheets.values.append({
@@ -102,7 +79,7 @@ async function saveNewEmailId (auth, email) {
       ],
     }
   });
-  console.log("cells updated", res.data.updates.updatedCells, res.data)
+  console.log("cells updated", res.data.updates.updatedCells)
 }
 
 // authorize().then(listMajors).catch(console.error);
